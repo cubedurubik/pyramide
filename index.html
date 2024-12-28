@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <style>
+        body {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+            margin: 0;
+            font-family: Arial, sans-serif;
+            background-color: white;
+        }
+        #word {
+            font-size: clamp(4rem, 15vw, 8rem);
+            font-weight: bold;
+            margin-bottom: 2rem;
+            text-align: center;
+            padding: 0 1rem;
+        }
+        #next {
+            background-color: white;
+            color: black;
+            padding: 0.8rem 1.5rem;
+            border: 2px solid black;
+            border-radius: 0.5rem;
+            font-size: clamp(1rem, 5vw, 1.2rem);
+            font-weight: bold;
+            cursor: pointer;
+            margin-bottom: 1rem;
+        }
+        #prev {
+            background: none;
+            border: none;
+            font-size: clamp(1.5rem, 7vw, 2rem);
+            cursor: pointer;
+            color: black;
+            padding: 0.5rem;
+        }
+        .controls {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+    </style>
+</head>
+<body>
+    <div id="word">Bonjour</div>
+    <div class="controls">
+        <button id="next">SUIVANT</button>
+        <button id="prev">←</button>
+    </div>
+
+    <script>
+        const words = ['Bonjour', 'Monde', 'Comment', 'Allez', 'Vous'];
+        let currentIndex = 0;
+        const wordElement = document.getElementById('word');
+
+        document.getElementById('next').addEventListener('click', () => {
+            currentIndex = (currentIndex + 1) % words.length;
+            wordElement.textContent = words[currentIndex];
+        });
+
+        document.getElementById('prev').addEventListener('click', () => {
+            currentIndex = (currentIndex - 1 + words.length) % words.length;
+            wordElement.textContent = words[currentIndex];
+        });
+    </script>
+</body>
+</html>

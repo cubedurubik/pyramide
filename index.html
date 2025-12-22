@@ -18,7 +18,6 @@
             font-weight: bold;
             margin-bottom: 2rem;
             text-align: center;
-            padding: 0 1rem;
         }
         #next {
             background-color: white;
@@ -26,7 +25,7 @@
             padding: 0.8rem 1.5rem;
             border: 2px solid black;
             border-radius: 0.5rem;
-            font-size: clamp(1rem, 5vw, 1.2rem);
+            font-size: 1.2rem;
             font-weight: bold;
             cursor: pointer;
             margin-bottom: 1rem;
@@ -34,52 +33,176 @@
         #prev {
             background: none;
             border: none;
-            font-size: clamp(1.5rem, 7vw, 2rem);
+            font-size: 2rem;
             cursor: pointer;
             color: black;
-            padding: 0.5rem;
         }
         .controls {
             display: flex;
             flex-direction: column;
             align-items: center;
         }
+
+        /* TIMER */
+        .timer {
+            position: fixed;
+            bottom: 1rem;
+            right: 1rem;
+            border: 2px solid black;
+            border-radius: 0.5rem;
+            padding: 0.8rem;
+            background: white;
+            text-align: center;
+        }
+        #time {
+            font-size: 1.4rem;
+            font-weight: bold;
+            margin-bottom: 0.5rem;
+        }
+        #countdown {
+            font-size: 2rem;
+            font-weight: bold;
+            margin-bottom: 0.5rem;
+        }
+        .timer button {
+            background: white;
+            border: 2px solid black;
+            border-radius: 0.4rem;
+            padding: 0.3rem 0.7rem;
+            font-weight: bold;
+            cursor: pointer;
+        }
     </style>
 </head>
 <body>
-    <div id="word">Lune</div>
-    <div class="controls">
-        <button id="next">SUIVANT</button>
-        <button id="prev">←</button>
-    </div>
 
-    <script>
-        const words = ['Lune', 'Vague', 'Boxeur', 'Criminel', 'Devant', 'Valorant', 'Pomme', 'Collectif', 'Tasse', 'Squeezie', 
-        'Quinze', 'Voyage', 'Épave', 'Guirlande', 'Monocle', 'Triche', 'Barcelone', 'Murmurer', 'Haleine', 
-        'Armurier', 'Inde', 'Évasion', 'Japon', 'Cogner', 'Youtube', 'Gros', 'Disque', 'Infraction', 
-        'Musique', 'Date', 'Violet', 'Noyer', 'Rampant', 'Blague', 'Chercheur', 'Chinois', 'Cheville', 
-        'Ruche', 'Vase', 'Cupidon', 'Laboratoire', 'Plagiat', 'Footballeur', 'Ori', 'Militaires', 
-        'Illusion', 'Wifi', 'Gekko', 'Tulipe', 'Rupture', 'Castor', 'Consultation', 'Traducteur', 'Rap', 
-        'Mental', 'Perdre', 'Police', 'Himalaya', 'Jury', 'Croître', 'Ile', 'Croix', 'Rose', 'Sanglier', 
-        'Mendiant', 'Pinces', 'Sucette', 'Intérieur', 'Dent', 'Danse', 'Éponge', 'Charloun', 'Autruche', 
-        'Peinture', 'Village', 'Chaussures', 'Laid', 'Librairie', 'Uniforme', 'Vivant', 'Esquimau', 
-        'Skis', 'Permanent', 'Streaming', 'Pieds', 'Piège', 'Avril', 'Zeus', 'Affreux', 'Renard', 'Attentat', 
-        'Langue', 'Galactique', 'Parapluie', 'Micro', 'Bonbon', 'Alpinisme', 'Mbappé', 'Grenade', 
-        'Électricien', 'Horloger', 'Original', 'Vertical', 'Lol', 'Nez', 'Moustache', 'Banque', 
-        'Marche'];
-        
-        let currentIndex = 0;
-        const wordElement = document.getElementById('word');
+<div id="word">MOT DE PASSE</div>
 
-        document.getElementById('next').addEventListener('click', () => {
-            currentIndex = (currentIndex + 1) % words.length;
-            wordElement.textContent = words[currentIndex];
-        });
+<div class="controls">
+    <button id="next">SUIVANT</button>
+    <button id="prev">←</button>
+</div>
 
-        document.getElementById('prev').addEventListener('click', () => {
-            currentIndex = (currentIndex - 1 + words.length) % words.length;
-            wordElement.textContent = words[currentIndex];
-        });
-    </script>
+<div class="timer">
+    <div id="countdown"></div>
+    <div id="time">01:30</div>
+    <button id="start">START</button>
+    <button id="reset">RESET</button>
+</div>
+
+<!-- SON FIN -->
+<audio id="beep">
+    <source src="data:audio/wav;base64,UklGRigAAABXQVZFZm10IBAAAAABAAEAESsAACJWAAACABAAZGF0YQQAAAAA" type="audio/wav">
+</audio>
+
+<script>
+    /* WORDS */
+const words = ['Soleil', 'Carburant', 'Pilote', 'Espion', 'Derrière', 'Minecraft', 'Banane', 'Solidaire', 'Bouteille',
+ 'Inoxtag', 'Vingt', 'Exploration', 'Naufrage', 'Lanternes', 'Binocle', 'Mensonge', 'Madrid', 'Chuchoter',
+ 'Parfum', 'Forgeron', 'Brésil', 'Fuite', 'Corée', 'Heurter', 'Twitch', 'Mince', 'Cercle', 'Délit',
+ 'Cinéma', 'Agenda', 'Turquoise', 'Saule', 'Glissant', 'Sarcasme', 'Ingénieur', 'Mexicain', 'Poignet',
+ 'Essaim', 'Bocal', 'Éros', 'Observatoire', 'Copie', 'Gardien', 'Loki', 'Civils', 'Mirage', 'Bluetooth',
+ 'Phoenix', 'Marguerite', 'Séparation', 'Blaireau', 'Castor', 'Consultation', 'Traducteur', 'Rap',
+        'Mental', 'Perdre', 'Police', 'Himalaya', 'Jury', 'Croître', 'Ile', 'Croix', 'Rose', 'Sanglier',
+        'Mendiant', 'Pinces', 'Sucette', 'Intérieur', 'Dent', 'Danse', 'Éponge', 'Charloun', 'Autruche',
+        'Peinture', 'Village', 'Chaussures', 'Laid', 'Librairie', 'Uniforme', 'Vivant', 'Esquimau',
+        'Skis', 'Permanent', 'Streaming', 'Pieds', 'Piège', 'Avril', 'Zeus', 'Affreux', 'Renard', 'Attentat',
+        'Langue', 'Galactique', 'Parapluie', 'Micro', 'Bonbon', 'Alpinisme', 'Mbappé', 'Grenade',
+        'Électricien', 'Horloger', 'Original', 'Vertical', 'Lol', 'Nez', 'Moustache', 'Banque',
+        'Marche', 'Balcon', 'Foudre', 'Casier', 'Tourner', 'Banquise', 'Pixel', 'Oreiller', 'Trafic',
+ 'Chiffre', 'Chorale', 'Tempête', 'Panique', 'Sabot', 'Rivière', 'Miroir', 'Ranger',
+ 'Brique', 'Orage', 'Serrure', 'Mécanique', 'Pigeon', 'Plastique', 'Rumeur', 'Tunnel',
+ 'Cartable', 'Fourmi', 'Bascule', 'Nuage', 'Siffler', 'Grotte', 'Radar', 'Fossile',
+ 'Chaudron', 'Plume', 'Écran', 'Dérailler', 'Cadenas', 'Parfum', 'Glaçon', 'Marathon',
+ 'Coussin', 'Fumée', 'Palette', 'Colère', 'Éclat', 'Rouille', 'Élastique', 'Craindre',
+ 'Sable', 'Manette', 'Pylône', 'Vibration', 'Graffiti', 'Écrou', 'Hublot', 'Temporel',
+ 'Brouillard', 'Tambour', 'Sourire', 'Chaîne', 'Pollen', 'Boussole', 'Coffret',
+ 'Éboulement', 'Sablier', 'Quartz', 'Dissonance', 'Ficelle', 'Aspirer', 'Charnière',
+ 'Fluide', 'Tonneau', 'Signal', 'Arôme', 'Fragment', 'Pendule', 'Crampon',
+ 'Cartouche', 'Éventail', 'Surcharge', 'Lentille', 'Gravité', 'Murmure',
+ 'Tornade', 'Balise', 'Relief', 'Givre', 'Matrice', 'Coulisse', 'Érosion',
+ 'Aimant', 'Voûte', 'Osciller', 'Friction', 'Ancre', 'Spirale'];
+    let currentIndex = 0;
+    const wordElement = document.getElementById('word');
+
+    document.getElementById('next').onclick = () => {
+        currentIndex = (currentIndex + 1) % words.length;
+        wordElement.textContent = words[currentIndex];
+    };
+    document.getElementById('prev').onclick = () => {
+        currentIndex = (currentIndex - 1 + words.length) % words.length;
+        wordElement.textContent = words[currentIndex];
+    };
+
+    /* TIMER */
+    let timeLeft = 90;
+    let timerInterval = null;
+    let running = false;
+
+    const timeDisplay = document.getElementById('time');
+    const startBtn = document.getElementById('start');
+    const countdownEl = document.getElementById('countdown');
+    const beep = document.getElementById('beep');
+
+    function updateTime() {
+        const min = String(Math.floor(timeLeft / 60)).padStart(2, '0');
+        const sec = String(timeLeft % 60).padStart(2, '0');
+        timeDisplay.textContent = `${min}:${sec}`;
+    }
+
+    function startTimer() {
+        timerInterval = setInterval(() => {
+            if (timeLeft > 0) {
+                timeLeft--;
+                updateTime();
+            } else {
+                clearInterval(timerInterval);
+                timerInterval = null;
+                running = false;
+                startBtn.textContent = "START";
+                beep.play(); // 🔊 son fin
+            }
+        }, 1000);
+    }
+
+    function countdownAndStart() {
+        let count = 3;
+        countdownEl.textContent = count;
+        const cd = setInterval(() => {
+            count--;
+            if (count > 0) {
+                countdownEl.textContent = count;
+            } else {
+                clearInterval(cd);
+                countdownEl.textContent = "";
+                startTimer();
+            }
+        }, 1000);
+    }
+
+    startBtn.onclick = () => {
+        if (!running) {
+            running = true;
+            startBtn.textContent = "PAUSE";
+            countdownAndStart();
+        } else {
+            running = false;
+            startBtn.textContent = "START";
+            clearInterval(timerInterval);
+            timerInterval = null;
+        }
+    };
+
+    document.getElementById('reset').onclick = () => {
+        clearInterval(timerInterval);
+        timerInterval = null;
+        running = false;
+        timeLeft = 90;
+        updateTime();
+        countdownEl.textContent = "";
+        startBtn.textContent = "START";
+    };
+</script>
+
 </body>
 </html>
